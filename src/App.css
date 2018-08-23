@@ -161,7 +161,14 @@
   -ms-user-select: none;
   user-select: none;
 }
+/*抓起后原先组件的样式*/
+.form-body .form-outer.dragging{
+    border: 1px dashed #b1b1b6;
+}
 .form-body .form-outer .form-item:not(:last-child){
+  border-right: 1px solid #ebebf0;
+}
+.form-body .form-outer .form-item:first-child{
   border-right: 1px solid #ebebf0;
 }
 .form-body .form-outer .form-item .mask{
@@ -173,4 +180,12 @@
 }
 .dhwz{
   padding: 15px 20px 20px;
+}
+
+.form-body .drop-over-downward{
+  border-bottom: 2px dashed #b1b1b6;
+}
+
+.form-body .drop-over-upward{
+  border-top: 2px dashed #b1b1b6;
 }

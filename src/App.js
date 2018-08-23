@@ -1,47 +1,46 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import 'antd/dist/antd.min.css';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import {Dhwz} from './modal.js';
 import './App.css';
-function dragDirection(
-    dragIndex,
-    hoverIndex,
-    initialClientOffset,
-    clientOffset,
-    sourceClientOffset,
-) {
-    const hoverMiddleY = (initialClientOffset.y - sourceClientOffset.y) / 2;
-    const hoverClientY = clientOffset.y - sourceClientOffset.y;
-    if (dragIndex < hoverIndex && hoverClientY > hoverMiddleY) {
-        return 'downward';
-    }
-    if (dragIndex > hoverIndex && hoverClientY < hoverMiddleY) {
-        return 'upward';
-    }
-}
 
-
-class BodyRow extends React.Component {
+class Test extends Component{
+    dragDirection = (
+        dragIndex,
+        hoverIndex,
+        initialClientOffset,
+        clientOffset,
+        sourceClientOffset,
+    ) => {
+        const hoverMiddleY = (initialClientOffset.y - sourceClientOffset.y) / 2;
+        const hoverClientY = clientOffset.y - sourceClientOffset.y;
+        if (dragIndex < hoverIndex && hoverClientY > hoverMiddleY) {
+            return 'downward';
+        }
+        if (dragIndex > hoverIndex && hoverClientY < hoverMiddleY) {
+            return 'upward';
+        }
+    }
     render() {
         const {
-            isOver,
             connectDragSource,
-            connectDropTarget,
-            moveRow,
+            isDragging ,
+            isOver,
             dragRow,
+            moverow,
             clientOffset,
             sourceClientOffset,
             initialClientOffset,
+            connectDropTarget,
             ...restProps
         } = this.props;
         const style = { ...restProps.style, cursor: 'move' };
-
         let className = restProps.className;
+        // 判断向上移动还是向下移动
         if (isOver && initialClientOffset) {
-            const direction = dragDirection(
+            const direction = this.dragDirection(
                 dragRow.index,
                 restProps.index,
                 initialClientOffset,
@@ -55,54 +54,22 @@ class BodyRow extends React.Component {
                 className += ' drop-over-upward';
             }
         }
-
-        return connectDragSource(
-            connectDropTarget(
-                <div  {...restProps}
-                      className={className}
-                      style={style}>
-                    <Dhwz >单行文本1</Dhwz>
-                    <div className="mask"></div>
-                </div>
-            )
-        );
-    }
-}
-class Test extends Component{
-    render() {
-        const {
-            connectDragSource,
-            isDragging ,
-            isOver,
-            dragRow,
-            clientOffset,
-            sourceClientOffset,
-            initialClientOffset,
-            ...restProps
-        } = this.props;
-        const style = { ...restProps.style, cursor: 'move' };
-        if (isOver && initialClientOffset) {
-            const direction = dragDirection(
-                dragRow.index,
-                restProps.index,
-                initialClientOffset,
-                clientOffset,
-                sourceClientOffset
-            );
-            console.log(direction)
+        if(isDragging){
+            className += ' dragging';
         }
         return connectDragSource(
-            <div {...restProps}
-                 style={style}>
-                <Dhwz >单行文本1</Dhwz>
-                <div className="mask"></div>
-            </div>
+                connectDropTarget(
+                    <div {...restProps}
+                         style={style}
+                         className={className}
+                    >
+                    </div>
+                )
         );
     }
 }
 const rowSource = {
     beginDrag(props) {
-        console.log(props)
         return {
             index: props.index,
         };
@@ -113,14 +80,13 @@ const rowTarget = {
     drop(props, monitor) {
         const dragIndex = monitor.getItem().index;
         const hoverIndex = props.index;
-        console.log(monitor.getItem())
         // Don't replace items with themselves
         if (dragIndex === hoverIndex) {
             return;
         }
 
         // Time to actually perform the action
-        props.moveRow(dragIndex, hoverIndex);
+        props.moverow.moveRow(dragIndex, hoverIndex);
 
         // Note: we're mutating the monitor item here!
         // Generally it's better to avoid mutations,
@@ -130,80 +96,150 @@ const rowTarget = {
     },
 };
 
+
 const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     sourceClientOffset: monitor.getSourceClientOffset(),
 }))(
-    DragSource('row', rowSource, (connect, monitor) => ({
-        connectDragSource: connect.dragSource(),
-        dragRow: monitor.getItem(),
-        clientOffset: monitor.getClientOffset(),
-        initialClientOffset: monitor.getInitialClientOffset(),
-    }))(BodyRow)
+    DragSource('row',rowSource,(connector, monitor) => ({
+            connectDragSource: connector.dragSource(),
+            isDragging: monitor.isDragging(),
+            initialClientOffset: monitor.getInitialClientOffset(),
+            dragRow: monitor.getItem(),
+            clientOffset: monitor.getClientOffset(),
+            initialClientOffset: monitor.getInitialClientOffset(),
+        })
+    )(Test)
 );
-
-
-const DragSource1 = DragSource('row',rowSource,(connector, monitor) => ({
+// 单独获取方法点击后可以看到弹出效果
+/*const DragSource = DragSource('row',rowSource,(connector, monitor) => ({
         connectDragSource: connector.dragSource(),
         isDragging: monitor.isDragging(),
         initialClientOffset: monitor.getInitialClientOffset(),
     })
-)(Test)
-const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-}, {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-}, {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-}];
-
+)(Test)*/
 class DragSortingTable extends React.Component {
     state = {
-        data: [{
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-        }, {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-        }, {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-        }],
+        data: [
+            {
+                key: '1',
+                title: '',
+                width:1,
+                childrenCount: 1,
+                children:[
+                    {
+                        key: '5',
+                        title: '单行文本1',
+                        width: 0.25,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                ],
+                level:1,
+            }, {
+                key: '2',
+                title: '',
+                width: 1,
+                childrenCount: 2,
+                children:[
+                    {
+                        key: '6',
+                        title: '单行文本2',
+                        width: 0.5,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                    {
+                        key: '7',
+                        title: '单行文本3',
+                        width: 0.5,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                ],
+                level:1,
+            }, {
+                key: '3',
+                title: '',
+                width: 1,
+                childrenCount: 3,
+                level:1,
+                children:[
+                    {
+                        key: '8',
+                        title: '单行文本4',
+                        width: 0.25,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                    {
+                        key: '9',
+                        title: '单行文本5',
+                        width: 0.5,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                    {
+                        key: '10',
+                        title: '单行文本6',
+                        width: 0.25,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                ],
+                level:1,
+            }, {
+                key: '4',
+                title: '单行文本7',
+                width:1,
+                childrenCount: 1,
+                level:1,
+                children:[
+                    {
+                        key: '11',
+                        title: '单行文本7',
+                        width: 0.25,
+                        level:2,
+                        type: 'dhwz',
+                    },
+                ],
+            },
+        ],
     }
-
-    components = {
-        body: {
-            row: DragableBodyRow,
-        },
-    }
-
     moveRow = (dragIndex, hoverIndex) => {
         const { data } = this.state;
         const dragRow = data[dragIndex];
-
         this.setState(
             update(this.state, {
                 data: {
                     $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
                 },
-            }),
-        );
+            })
+        )
     }
-
+    formNodes = (data) => {
+        return data.map((item,i) => {
+            if(item.level === 1){
+                return (
+                    <DragableBodyRow className="form-outer" key={i} index={i} moverow={{moveRow: this.moveRow}}>
+                        {this.formNodes(item.children)}
+                    </DragableBodyRow>
+                )
+            }
+            else {
+                switch (item.type) {
+                    case 'dhwz':
+                        return <Dhwz width={item.width} key={item.key} index={item.key}>{item.title}</Dhwz>
+                        break;
+                    default:
+                        break;
+                }
+            }
+        })
+    }
     render() {
+        let formNodes = this.formNodes(this.state.data)
         return (
 
                 <div className="form-builder">
@@ -215,61 +251,39 @@ class DragSortingTable extends React.Component {
 
                         </div>
                         <div className="form-body-content">
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本1</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <DragSource1 className="form-item col-12"/>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本2</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本3</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本4</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本5</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本6</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-6">
-                                    <Dhwz >单行文本7</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                                <div className="form-item col-6">
-                                    <Dhwz >单行文本9</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
-                            <div className="form-outer">
-                                <div className="form-item col-12">
-                                    <Dhwz >单行文本8</Dhwz>
-                                    <div className="mask"></div>
-                                </div>
-                            </div>
+                            {formNodes}
+                            {/*<DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本1</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本9</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本2</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本3</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本4</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本5</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz width={0.25}>单行文本6</Dhwz>
+                                <Dhwz width={0.5}>单行文本6</Dhwz>
+                                <Dhwz width={0.25}>单行文本6</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz width={0.25}>单行文本7</Dhwz>
+                                <Dhwz width={0.25}>单行文本9</Dhwz>
+                                <Dhwz width={0.25}>单行文本9</Dhwz>
+                                <Dhwz width={0.25}>单行文本9</Dhwz>
+                            </DragableBodyRow>
+                            <DragableBodyRow className="form-outer">
+                                <Dhwz>单行文本8</Dhwz>
+                            </DragableBodyRow>*/}
 
                         </div>
                     </div>
@@ -280,7 +294,5 @@ class DragSortingTable extends React.Component {
         );
     }
 }
-
 const Demo = DragDropContext(HTML5Backend)(DragSortingTable);
-
 export default Demo;
