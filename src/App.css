@@ -1,0 +1,176 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@font-face {
+  font-family: 'form-iconfont';  /* project id 621475 */
+  src: url('//at.alicdn.com/t/font_621475_j9ckr1xqgsb.eot');
+  src: url('//at.alicdn.com/t/font_621475_j9ckr1xqgsb.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_621475_j9ckr1xqgsb.woff') format('woff'),
+  url('//at.alicdn.com/t/font_621475_j9ckr1xqgsb.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_621475_j9ckr1xqgsb.svg#iconfont') format('svg');
+}
+.col-1{
+  width: 8.3333333%
+}
+.col-2{
+  width: 16.6666667%
+}
+.col-3{
+  width: 25%
+}
+.col-4{
+  width: 33.3333333%
+}
+.col-5{
+  width: 41.6666667%
+}
+.col-6{
+  width: 50%
+}
+.col-7{
+  width: 58.3333333%
+}
+.col-8{
+  width: 66.6666667%
+}
+.col-9{
+  width: 75%
+}
+.col-10{
+  width: 83.33333333%
+}
+.col-11{
+  width: 91.6666667%
+}
+.col-12{
+  width: 100%
+}
+.form-builder{
+  position: relative;
+  height:calc(100vh - 50px);
+}
+.form-left{
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 265px;
+  height: calc(100% - 30px);
+}
+
+.form-left .widgets{
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 10px;
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+}
+.form-left .widgets p {
+  padding: 10px 10px 10px 15px;
+}
+.form-left .widgets ul{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.form-left .widgets ul li{
+  flex-direction: column;
+  width: calc(100% / 3);
+  height: 63px;
+  border-top: 1px solid #f5f5f7;
+  cursor: pointer;
+  background: #fff;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-left .widgets ul li:not(:nth-child(3n)){
+  border-right: 1px solid #f5f5f7;
+}
+.form-left .widgets ul li .form-iconfont{
+  font-style: normal;
+  font-family: 'form-iconfont';
+  display: block;
+  font-weight: 300;
+}
+.form-left .widgets ul li:hover .form-iconfont {
+  color: #217cca
+}
+.form-left .widgets ul li:hover{
+  border: 1px solid #0089D1;
+  box-shadow: 0 0 2px 2px rgba(33, 124, 202, 0.2);
+}
+.form-body{
+  width: 500px;
+  height: 100%;
+  margin: auto;
+
+}
+
+.form-body .form-body-header{
+  margin-bottom: 11px;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+}
+.form-body .form-body-content{
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+  border-radius: 3px;
+}
+.form-body .form-outer{
+  border-bottom: 1px solid #ebebf0;
+  display: flex;
+}
+.form-body .form-outer .form-item{
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.form-body .form-outer .form-item:not(:last-child){
+  border-right: 1px solid #ebebf0;
+}
+.form-body .form-outer .form-item .mask{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.dhwz{
+  padding: 15px 20px 20px;
+}
