@@ -189,3 +189,22 @@
 .form-body .drop-over-upward{
   border-top: 2px dashed #b1b1b6;
 }
+.drop-over-leftward{
+  border-left: 2px dashed #b1b1b6 !important;
+}
+
+.drop-over-rightward{
+  border-right: 2px dashed #b1b1b6 !important;
+}
+.react-resizable {
+  position: relative;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  bottom: 0;
+  right: -5px;
+  cursor: col-resize;
+}
